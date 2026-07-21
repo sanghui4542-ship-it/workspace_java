@@ -76,10 +76,13 @@ class FruitSeller{
 	int myMoney;                 //3.판매수익을 저장할 변수
 
 /*생성자*/
+	 // new FruitSeller(1500,                  30,               0);
+
+	// new FruitSeller(1000,                  20,             5000);
 	//				   사과 한개 당 가격 ,       보유 사과 수 ,      판매수익
-	public FruitSeller(int apple_price,  int numOfApple_, int myMoney_) {     // <----- new FruitSeller(1000, 30, 0);
+	public FruitSeller(int apple_price,  int numOfApple_, int myMoney_) {    
 		
-		APPLE_PRICE = apple_price; //1000;
+		APPLE_PRICE = apple_price; //1500;
 		numOfApple  = numOfApple_; //30;
 		myMoney     = myMoney_;    //0;
 		
@@ -167,19 +170,138 @@ class FruitBuyer {
 }//====>  과일구매자 (FruitBuyer class)정의 끝 
 
 
-
-
 public class Ex1_2 {
 	public static void main(String[] args) {
 	//(3단계) 객체(인스턴스) 생성과 사용
 	//-객체생성시 new 연산자 사용 
 	//-클래스 (설계도,틀) 을 통해 -> 객체생성
 	
+	//1. 과일 장수 1 객체 생성 시 생성자호출해서 객체 데이터 완성
+	//  객체 데이터 :  사과 한개당 가격 1500원,   사과보유갯수 30개,   판매수익 및 잔고 : 0원
+	FruitSeller   fruitSeller1 =  new FruitSeller(1500, 30, 0);
+	/*		
+				[  0x16     ] = ------------------0x16--------------------------------------------------
+			
+									final int APPLE_PRICE;   [ 1500 ]
+									
+									int numofApple;  [ 30 ]
+									
+									int myMoney; [ 0 ]
+									
+									
+									int saleApple(int money){
+									
+										int num = money / APPLICE_PIRCE;
+										
+										numofApple -= num;
+										
+										myMoney += money;
+										
+										return num;
+									}
+									
+									public void showSaleResult() {
+										System.out.println("과일장수객체의 남은 사과 갯수 : " +  numofApple);
+										System.out.println("과일장수객체의 현재 잔고 : " + myMoney);
+									}
+							   -----------------------------------------------------------------------
+*/	
+	
+		//2. 과일 장수 2 객체 생성 시 생성자호출해서 객체 데이터 완성
+		//  객체 데이터 :  사과 한개당 가격 1000원,   사과보유갯수 20개,   판매수익 및 잔고 : 5000원
+		FruitSeller    fruitSeller2  =  new FruitSeller(1000, 20, 5000);
+		/*		
+						[ 0x17      ] = ------------------0x17--------------------------------------------------
+				
+											final int APPLE_PRICE;   [ 1000 ]
+											
+											int numofApple;  [ 20 ]
+											
+											int myMoney; [ 5000 ]
+											
+											int saleApple(int money){
+											
+												int num = money / APPLICE_PIRCE;
+												
+												numofApple -= num;
+												
+												myMoney += money;
+												
+												return num;
+											}
+											
+											public void showSaleResult() {
+												System.out.println("과일장수객체의 남은 사과 갯수 : " +  numofApple);
+												System.out.println("과일장수객체의 현재 잔고 : " + myMoney);
+											}
+									   -----------------------------------------------------------------------
+*/	
+		
+		  //new FruitBuyer            =>  FruitBuyer class설계도 하나 이용해 새로운 객체 메모리 만든다
+		  //    FruitBuyer(10000, 0); =>  생성자 호출할때 객체 데이터들을 매개변수로 전달해 객체변수값들 모두 저장시킨 객체메모리 완성.
 
-				
-				
-				
-				
+			
+		//과일 구매자 1 객체 생성
+		//객체 데이터  :  현재 소유 현금 10000원,    현재 구매한 사과 갯수 0개 
+		FruitBuyer   fruitBuyer1 = new FruitBuyer(10000, 0);
+		/*		
+						 [  0x5 ]= ---------------- 0x5-----------------
+					
+										int myMoney; [ 5500 ]
+										
+										int numOfApple;  [ 3  ]
+					
+										public void buyApple(FruitSeller seller,  int money) {
+
+											  numOfApple  += seller.saleApple(money);
+											  
+											  //과일 판매자 객체(FruitSeller객체)에게 과일구매자객체가 지불한 2000원 차감 
+											  myMoney -= money;
+										}	  
+										
+										 public void showBuyResult() {
+											 System.out.println("현재 잔액 : " + myMoney); //현재 남은 돈 출력
+											 System.out.println("보유 사과 수 : " + numOfApple);//현재 보유한 사과 수 출력
+										 }
+										
+									--------------------------------------
+		*/				
+		
+		// 스토리 :  과일 구매자 1 객체는 과일 장수 1 객체에게 4500원을 지불하고  과일(사과)를 구매 하는 동작 시키기
+		fruitBuyer1.buyApple(fruitSeller1, 4500);
+	
+		System.out.println("------------- 과일 구매자 1 객체 ---------------");
+		fruitBuyer1.showBuyResult();
+		/*
+		------------- 과일 구매자 1 객체 ---------------
+		현재 잔액 : 5500
+		보유 사과 수 : 3
+		*/
+		System.out.println("------------ 과일 장수 1객체 ----------------");
+		fruitSeller1.showSaleResult();
+		/*		
+		------------ 과일 장수 1객체 ----------------
+		과일장수객체의 현재 남은 사과수 : 27
+		과일장수객체의 현재 잔고 : 4500
+		*/
+		
+		//스토리 : 과일 구매자 1객체는 과일 장수 2 객체에게 2000원을 지불하고 과일(사과)를 구매 하는 동작 시키기
+		fruitBuyer1.buyApple(fruitSeller2, 2000);
+		
+		System.out.println("-------------- 2번째로 구매한 과일 구매자1 객체 -----------");
+		fruitBuyer1.showBuyResult();
+		/*
+		 -------------- 2번째로 구매한 과일 구매자1 객체 -----------
+		현재 잔액 : 3500
+		보유 사과 수 : 5
+		 */
+		System.out.println("-------------- 과일 장수 2객체 ---------------");
+		fruitSeller2.showSaleResult();
+		/*
+		-------------- 과일 장수 2객체 ---------------
+		과일장수객체의 현재 남은 사과수 : 18
+		과일장수객체의 현재 잔고 : 7000
+		*/
 	}
 
 }
