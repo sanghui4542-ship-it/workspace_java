@@ -23,10 +23,10 @@ public class Survivor { //생존자 설계도
 	//   int    power;  -> 총 공격력
 
 	//>>> 여기에 객체 변수 4개를 선언하세요.
-		String name;
-		int    hp;
-		int    ammo;
-		int    power;
+	  String name;     //-> 생존자 이름 (예: "레온")
+	  int    hp;       //-> 생존자 체력
+	  int    ammo;     //-> 총알 개수  ★공격할 때마다 1발씩 소모★
+	  int    power;    //-> 총 공격력
 
 
 
@@ -37,24 +37,22 @@ public class Survivor { //생존자 설계도
 	//   ★ this() 생성자 호출구문으로 두번째 생성자에게 넘기세요.
 
 	//>>> 여기에 첫번째 생성자를 작성하세요.
-	public Survivor(String name) {
+	public Survivor(String name) {  
+						// "레온"
 		this(name, 100, 10, 30);
 	}
-
-
 
 	//   두번째 생성자 : 이름, 체력, 총알, 공격력 모두 받는 생성자
 	//   ★ this 키워드로 객체변수 4개를 초기화하세요.
 
 	//>>> 여기에 두번째 생성자를 작성하세요.
+	//alt + shift + s   o
 	public Survivor(String name, int hp, int ammo, int power) {
 		this.name = name;
 		this.hp = hp;
 		this.ammo = ammo;
 		this.power = power;
 	}
-
-
 
 	//3. 메소드 정의
 
@@ -70,10 +68,8 @@ public class Survivor { //생존자 설계도
 	//>>> 여기에 isAlive 메소드를 작성하세요.
 	public boolean isAlive() {
 		
-		return(this.hp > 0); 
+		return (this.hp > 0); 
 	}
-
-
 
 	//두번째 메소드
 	//메소드명   : shoot
@@ -91,23 +87,32 @@ public class Survivor { //생존자 설계도
 
 	//>>> 여기에 shoot 메소드를 작성하세요.
 	public void shoot(Zombie target) {
+		//  조건문1 : 총알이 없으면(ammo <= 0)
+		//            "OOO의 총알이 떨어졌습니다! 재장전 필요!" 출력 후 return
 		if(this.ammo <= 0) {
 			System.out.println(this.name + "의 총알이 떨어졌습니다! 재장전 필요!");
-			return;			
-		}if(target.hp <= 0) {
 			return;
 		}
-		this.ammo--;
-		target.hp -= this.power;
-		System.out.println(this.name + "이(가) 좀비를 공격! (공격력: " + this.power + ", 남은총알:" + this.ammo + "발)");
-	
-		if(target.hp <= 0) {
-			target.hp = 0;
-			System.out.println("좀비 처치!");
-		}
-	}
 		
-
+		//  조건문2 : target 좀비가 이미 죽었으면(hp <= 0)
+		//            아무 출력 없이 그냥 return  (죽은 좀비엔 총알 낭비 X)
+		if(target.hp <= 0) {
+			return;
+		}
+		
+		//  공격처리 : ammo를 1 감소, target.hp를 this.power만큼 감소
+		this.ammo -= 1;      target.hp -= this.power;
+		
+		//  출력    : "OOO이(가) 좀비를 공격! (공격력:XX, 남은총알:X발)"
+		System.out.println(name + "이(가) 좀비를 공격! (공격력:" + power + ", 남은총알:" + ammo + "발)");
+		
+		//  마무리  : target.hp가 0이하가 되면 0으로 고정하고
+		//            "좀비 처치!" 출력
+		if(target.hp <= 0) {
+			target.hp = 0;  System.out.println("좀비 처치!");
+		}
+		
+	}
 
 	//세번째 메소드
 	//메소드명   : reload
@@ -118,8 +123,8 @@ public class Survivor { //생존자 설계도
 
 	//>>> 여기에 reload 메소드를 작성하세요.
 	public void reload() {
-		this.ammo = 10;
-		System.out.println(this.name + " 재장전 완료! (총알:" + this.ammo + "발)");
+		this.ammo = 10;  
+		System.out.println(this.name + " 재장전 완료! (총알:10발)");
 	}
 
 
@@ -139,24 +144,27 @@ public class Survivor { //생존자 설계도
 	//  4) 반복이 끝나면 "===== 웨이브 종료! =====" 출력
 
 	//>>> 여기에 fightWave 메소드를 작성하세요.
-	public void fightWave(Zombie[] zombies) {
+	public void fightWave(Zombie[] zombies) {     //  = [new Zombie(),   new Zombie(),   ..... ]
 		
-		System.out.println("===== "+ this.name "의 웨이브 전투 시작! =====");
+		//  1) "===== OOO의 웨이브 전투 시작! =====" 출력
+		System.out.println("\n===== "+ this.name +"의 웨이브 전투 시작! =====");
 		
-		for(int i = 0; i < zombies.length; i++) {
-			if(this.ammo <= 0)	reload();
+		//  2) for 반복문으로 zombies 배열을 처음부터 끝까지 돈다
+		//     (힌트: for(int i = 0; i < zombies.length; i++) )
+		for(int i=0;   i<zombies.length; i++) {
 			
-			this.shoot(zombies[i]);
-			
+			//  3) 반복 안에서:
+			//     - 만약 내(this) 총알이 0이면 reload() 메소드를 호출해 재장전
+			//       (★메소드 안에서 다른 메소드를 호출하는 연습★)
+			//     - 그 다음 shoot(zombies[i]) 를 호출해 i번째 좀비를 공격
+			if(this.ammo <= 0)  this.reload();		
+			this.shoot( zombies[i]   );  
 		}
+		
+		//  4) 반복이 끝나면 "===== 웨이브 종료! =====" 출력
+		System.out.println("===== 웨이브 종료! =====");
+		
 	}
-
-
-
-
-
-
-
 
 	//다섯번째 메소드
 	//메소드명   : status
@@ -164,11 +172,10 @@ public class Survivor { //생존자 설계도
 	//출력형식   : [생존자] 이름 - 체력:XX, 총알:X발, 공격력:XX
 
 	//>>> 여기에 status 메소드를 작성하세요.
-	public void stauts() {
-		System.out.println("[생존자]" + this.name + "-" + "체력:" + this.hp + ", 총알:" + this.ammo + ", 공격력:" + this.power);
+	public void status() {
+		System.out.println("[생존자] " + this.name + "- 체력:" + this.hp 
+				            + ", 총알:"+ this.ammo + "발, 공격력: " + this.power);
 	}
-
-
 
 	public static void main(String[] args) {
 
@@ -176,7 +183,8 @@ public class Survivor { //생존자 설계도
 		//  변수명 leon, 이름 "레온"  -> 체력100, 총알10, 공격력30
 
 		//>>> 여기에 레온 객체 생성 코드를 작성하세요.
-		Survivor leon = new Survivor("레온" , 100, 10, 30);
+		Survivor leon = new Survivor("레온");
+
 
 		//좀비 12마리를 "배열"에 담기
 		//  ★배열 만드는 문법:  Zombie[] 배열명 = new Zombie[12];
@@ -186,32 +194,76 @@ public class Survivor { //생존자 설계도
 		//  (Zombie 클래스는 아래에 이미 만들어져 있습니다)
 
 		//>>> 여기에 Zombie 배열 생성 + for문으로 좀비 12마리 담는 코드를 작성하세요.
-		for() {
+
+		Zombie[]  zombies = new Zombie[12];
+		
+		for(int i=0;  i<zombies.length;   i++) {
 			
+				zombies[i] = new Zombie("좀비" + (i+1), 30);
 		}
-
-
-
+		
+/*		
+				zombies                       ┌───── 0xA0 배열 상자 (칸 12개) ───────┐
+				   ┌──────────┐               │  [0]  [ new Zombie("좀비1", 30); ]                    
+				   │  0xA0    │ ───────────►  │  [1]  [ new Zombie("좀비2", 30); ]                     
+				   └──────────┘               │  [2]  [ new Zombie("좀비3", 30); ]                    
+				   (참조변수 =                  │  [3]  [ new Zombie("좀비4", 30); ]                   
+				    주소만 저장)                 │  [4]  [ new Zombie("좀비5", 30);]                  
+				                              │  [5]  [ new Zombie("좀비6", 30); ]                 
+				      ※ null = "아직           │  [6]  [ new Zombie("좀비7", 30); ]                   
+				        아무것도                │  [7]  [ new Zombie("좀비8", 30); ]                  
+				        안 들어있는              │  [8]  [ new Zombie("좀비9", 30); ]                    
+				        빈 칸"                 │  [9]  [ new Zombie("좀비10", 30); ] 
+				                              │  [10] [ new Zombie("좀비11", 30); ]
+				                              │  [11] [ new Zombie("좀비12", 30); ]
+				                              └──────────────────────────────────┘
+				                                   ▲
+				                                   zombies.length 는 이 "칸 개수" = 12
+*/
+		
 
 		//전투 시작 전 생존자 상태 출력
-
 		//>>> 여기에 leon.status() 호출을 작성하세요.
-
+		System.out.println();
+		leon.status();
 
 		//웨이브 전투 실행! (배열을 통째로 넘긴다)
 		//  힌트: leon.fightWave(zombies);
 		//  ※ 좀비 12마리 > 총알 10발 이므로 도중에 reload가 자동 발동됩니다!
 
 		//>>> 여기에 fightWave 호출을 작성하세요.
+		leon.fightWave(zombies);
 
 
 		//전투 종료 후 생존자 상태 + 각 좀비 상태 출력
 		//  (좀비 상태는 for문으로 배열을 돌며 zombies[i].status() 호출)
 
 		//>>> 여기에 종료 후 상태 출력 코드를 작성하세요.
+		System.out.println("\n==== 전투 종료 후 상태 ====");
+		leon.status();
+		for(int i=0;   i<zombies.length; i++) {
+				
+			zombies[i].status();
+		}
 
-
-
+		/*		
+		zombies                       ┌───── 0xA0 배열 상자 (칸 12개) ───────┐
+		   ┌──────────┐               │  [0]  [ new Zombie("좀비1", 30); ]                    
+		   │  0xA0    │ ───────────►  │  [1]  [ new Zombie("좀비2", 30); ]                     
+		   └──────────┘               │  [2]  [ new Zombie("좀비3", 30); ]                    
+		   (참조변수 =                  │  [3]  [ new Zombie("좀비4", 30); ]                   
+		    주소만 저장)                 │  [4]  [ new Zombie("좀비5", 30);]                  
+		                              │  [5]  [ new Zombie("좀비6", 30); ]                 
+		      ※ null = "아직           │  [6]  [ new Zombie("좀비7", 30); ]                   
+		        아무것도                │  [7]  [ new Zombie("좀비8", 30); ]                  
+		        안 들어있는              │  [8]  [ new Zombie("좀비9", 30); ]                    
+		        빈 칸"                 │  [9]  [ new Zombie("좀비10", 30); ] 
+		                              │  [10] [ new Zombie("좀비11", 30); ]
+		                              │  [11] [ new Zombie("좀비12", 30); ]
+		                              └──────────────────────────────────┘
+		                                   ▲
+		                                   zombies.length 는 이 "칸 개수" = 12
+*/
 
 	}
 }
