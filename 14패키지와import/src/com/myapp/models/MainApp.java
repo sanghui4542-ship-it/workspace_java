@@ -8,6 +8,6 @@ public class MainApp {
 		localUser.printInfo();
 		
 		com.external.models.User externalUser = new com.external.models.User(1234);
-		externalUser.printIntfo();
+		externalUser.printInfo();
 	}
 }
