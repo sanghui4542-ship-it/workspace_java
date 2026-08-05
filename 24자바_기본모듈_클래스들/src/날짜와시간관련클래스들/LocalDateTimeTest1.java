@@ -49,10 +49,29 @@ public class LocalDateTimeTest1 {
 		//순서2. 
 		//참고. DateTimeFormatter클래스는 날짜와 시간을 주어진 문자열 패턴으로 변환할때 사용 하는 클래스로,
 		//     LocalDateTime객체의 format()메소드를 호출할때 매개값으로 제공하면 문자열 패턴과 동일한 문자열을 반환받아 얻을수 있음
-		DateTimeFormatter  dtf;
+		DateTimeFormatter  dtf = DateTimeFormatter.ofPattern("yyyy.MM.dd a HH:mm:ss");
+		
+		//순서3.
+		System.out.println("현재 날짜와 시간 정보 : " +  dtf.format(localDateTime)   );
+		//					현재 날짜와 시간 정보 : 2026.08.05 오전 09:14:28
+		
+		//순서4. 현재 날짜와 시간 정보  : 2026.08.05 오전 09:14:28 에서  1년을  +  해서  2027.08.05 오전 09:14:28 로 만들자
+		LocalDateTime result1 = localDateTime.plusYears(1);
+		System.out.println("현재 날짜와 시간 정보에서 1년 + 한 날짜 : " + result1.format(dtf)    );
+		//					현재 날짜와 시간 정보에서 1년 + 한 날짜 : 2027.08.05 오전 09:18:29
 		
 		
-
+		//순서5. 현재 날짜와 시간 정보  : 2026.08.05 오전 09:14:28 에서 
+		//      월 정보만 2달  +  해서  2026.10.05 오전 09:14:28 날짜로 만들어 제공 받자
+		LocalDateTime result2 = localDateTime.plusMonths(2);
+		System.out.println("현재 날짜와 시간정보에서 2달 +  한  날짜 : " + result2.format(dtf));
+		//					현재 날짜와 시간정보에서 2달 +  한  날짜 : 2026.10.05 오전 09:22:31
+		
+		//순서6. 현재 날짜와 시간 정보 : 2026.08.05 오전 09:14:28 에서 
+		//      일  정보만 7일 +  해서  2026.08.12 오전 09:14:28 날짜로 만들어 제공 받자
+		LocalDateTime result3 = localDateTime.plusDays(7);	
+		System.out.println("현재 날짜와 시간정보에서 7일  +  한  날짜 : " + result3.format(dtf));
+		//					현재 날짜와 시간정보에서 7일  +  한  날짜 : 2026.08.12 오전 09:26:20
 	}
 
 }
